@@ -1,0 +1,107 @@
+/*************************************
+ * prim_class01.pde
+ *************************************/
+static final int MAX = 20;  // 定数　図形の数
+// クラスを型にして変数を作る
+// ここでは入れ物ができただけで中身はまだ
+CBox box[] = new CBox[MAX];
+CCircle en[] = new CCircle[MAX];
+
+void setup() {
+  size(800, 600);
+  frameRate(20);
+  smooth();
+  for(int i=0; i<MAX; i++){
+    // 四角形を作る
+    // ここで一個ずつ中身が作られる
+    box[i] = new CBox();
+    // 円を作る
+    en[i] = new CCircle();
+  }
+}
+
+void draw() {
+  background(130, 160, 180);
+
+  for(int i=0; i<MAX; i++){
+    // 円を描く
+    en[i].drawPrim();
+    // 四角を描く
+    box[i].drawPrim();
+  }
+}
+
+/*************************************
+ * PrimClass.pde
+ *************************************/
+/*
+ * 四角を描くクラス
+ */
+class CBox{
+  // メンバ変数
+  float x, y;  // 座標
+  float w, h;  // 幅, 高さ  
+  float moveX, moveY;  // 移動量
+  
+  // コンストラクタ　new でインスタンス（実体）が作られた時に
+  // 最初に自動的に起動するメソッド
+  CBox(){
+    //変数初期化
+    x = random(width); y = random(height);
+    w = random(10,200); h = random(10,200);
+    moveX = random(1,10); moveY = random(1,10);
+    // 位置調整
+    if(x + w > width) x = width - (w + moveX);
+    if(y + h > height) y = height - (h + moveY);
+  }
+
+  // 跳ね返りを判定するメソッド
+  void chechDirection(){
+    if(x < 0 || x + w > width) moveX *= -1;
+    if(y < 0 || y + h > height) moveY *= -1;
+  }
+
+  // 図形を描くメソッド
+  void drawPrim(){
+    // 四角を描く
+    rect(x, y, w, h);  // 四角を描く
+    x += moveX; y += moveY;
+    chechDirection();
+  }  
+}
+
+/*
+ * 円を描くクラス
+ */
+class CCircle{
+  // メンバ変数
+  float x, y;  // 座標
+  float w, h;  // 幅, 高さ  
+  float moveX, moveY;  // 移動量
+  
+  // コンストラクタ　new でインスタンス（実体）が作られた時に
+  // 最初に自動的に起動するメソッド
+  CCircle(){
+    //変数初期化
+    x = random(width); y = random(height);
+    w = random(10,200); h = random(10,200);
+    moveX = random(1,10); moveY = random(1,10);
+    // 位置調整
+    if(x + w > width) x = width - (w + moveX);
+    if(y + h > height) y = height - (h + moveY);
+  }
+
+  // 跳ね返りを判定するメソッド
+  void chechDirection(){
+    if(x < 0 || x + w > width) moveX *= -1;
+    if(y < 0 || y + h > height) moveY *= -1;
+  }
+
+  // 図形を描くメソッド
+  void drawPrim(){
+    // 円を描く
+    ellipse(x + w / 2, y + h / 2, w, h);  // 四角を描く
+    x += moveX; y += moveY;
+    chechDirection();
+  }  
+}

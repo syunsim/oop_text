@@ -1,0 +1,90 @@
+/*
+ * 図形クラス prim_class20.pde
+ *    CPrimを抽象クラスにした
+ *    抽象クラスはnewでインスタンスを作成できない
+ */
+// abstract 指定
+abstract class CPrim{
+  // メンバ変数
+  float x, y;  // 座標
+  float w, h;  // 幅, 高さ  
+  float moveX, moveY;  // 移動量
+  float sizeW, sizeH;  // 大きさ変化量
+  int colR, colG, colB;  // 色
+
+  // コンストラクタ　new でインスタンス（実体）が作られた時に
+  // 最初に自動的に起動するメソッド
+  CPrim(){
+    //変数初期化
+    x = random(width); y = random(height);
+    w = random(10,200); h = random(10,200);
+    moveX = random(1,10); moveY = random(1,10);
+    // 位置調整
+    if(x + w > width) x = width - (w + moveX);
+    if(y + h > height) y = height - (h + moveY);
+    sizeW = sizeH = 2;
+    colR = int(random(256)); colG = int(random(256)); colB = int(random(256));
+  }
+
+  // 図形を描くメソッド
+  // abstract なので抽象メソッドになる。
+  // 中身は子クラスの方で定義する
+  abstract void drawPrim();
+
+  // 跳ね返りを判定するメソッド
+  void checkDirection(){
+    if(x < 0 || x + w + abs(sizeW) > width) moveX *= -1;
+    if(y < 0 || y + h + abs(sizeH) > height) moveY *= -1;
+    if(x + w  + abs(sizeW) > width) x -= abs(sizeW) + abs(moveX);
+    if(y + h  + abs(sizeH) > height) y -= abs(sizeH) + abs(moveY);
+  }
+
+  // 大きさを変化するメソッド
+  void cheangeSize(){
+    if(w < 0 || w > 200) sizeW *= -1;
+    if(h < 0 || h > 200) sizeH *= -1;
+  }
+
+  // 色を塗る
+  void setColor(){
+    colorMode(RGB,256);
+    noStroke(); // 縁線を消す
+    fill(colR, colG, colB);
+    colR += 1; colG += 1; colB += 1;
+    if(colR > 255) colR = 0;
+    if(colG > 255) colG = 0;
+    if(colB > 255) colB = 0;
+  }
+}
+
+
+/*
+ * 四角を描くクラス
+ */
+class CBox extends Prim{
+  // 図形を描くメソッド
+  void drawPrim(){
+    setColor();
+    rect(x, y, w, h);  // 四角を描く
+    x += moveX; y += moveY;
+    w += sizeW; h += sizeH;
+    checkDirection();
+    cheangeSize();
+  }  
+}
+
+/*
+ * 円を描くクラス
+ */
+class CCircle extends Prim{
+  // 図形を描くメソッド
+  void drawPrim(){
+     setColor();
+   // 円を描く
+    ellipse(x + w / 2, y + h / 2, w, h);
+    x += moveX; y += moveY;
+    w += sizeW; h += sizeH;
+    checkDirection();
+    cheangeSize();
+ }  
+}

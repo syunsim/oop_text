@@ -1,0 +1,56 @@
+/**************************************
+ * prim02.pde
+ * 図形をたくさん動かす
+ **************************************/
+static final int MAX = 5;  // 定数
+// グローバル変数
+// 変数にしておくと変更要求に対応できる
+float x[] = new float[MAX];
+float y[] = new float[MAX];
+float w[] = new float[MAX];
+float h[] = new float[MAX];
+float moveX[] = new float[MAX];
+float moveY[] = new float[MAX];
+
+/*************************************
+ * 最初に１回だけ動く関数（メソッド）
+ *    おもに初期設定に使う
+ *************************************/
+void setup() {
+  size(800, 600);
+  frameRate(20);
+  smooth();
+  //変数初期化
+  for(int i=0; i<MAX; i++){
+    x[i] = random(width); y[i] = random(height);
+    w[i] = random(10,200); h[i] = random(10,200);
+    moveX[i] = random(1,5); moveY[i] = random(1,5);
+    // 位置調整
+    if(x[i] + w[i] > width) x[i] = width - (w[i] + moveX[i]);
+    if(y[i] + h[i] > height) y[i] = height - (h[i] + moveY[i]);
+  }
+}
+
+/********************************************
+ * frameRate に応じて何度も動く（ループする）
+ * 座標などを変えると絵を動かすことができる
+ ********************************************/
+void draw() {
+  background(130, 160, 180);
+
+  // 四角を描く rect(x, y, w, h)
+  // x, y : 座標  左上角の位置
+  // w, h : 幅, 高さ
+  for(int i=0; i<MAX; i++){
+    rect(x[i], y[i], w[i], h[i]);  // processing の組込関数
+    // 移動量
+    x[i] += moveX[i];  y[i] += moveY[i];
+    // 跳ね返り
+    if(x[i] < 0 || x[i] + w[i] > width) moveX[i] *= -1;
+    if(y[i] < 0 || y[i] + h[i] > height) moveY[i] *= -1;
+  }
+  // 円を描く ellipse(x, y, w, h)
+  // x, y : 座標　円の中心の位置
+  // w, h : 幅, 高さ
+//  ellipse(x + w / 2, y + h /2, w, h);
+}
